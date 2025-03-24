@@ -6,7 +6,6 @@ try {
     // Sätt PDO att kasta undantag vid fel
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    echo "Anslutning lyckades!";
 } catch (PDOException $e) {
     echo "Anslutningen misslyckades: " . $e->getMessage();
     die();

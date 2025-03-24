@@ -7,7 +7,7 @@ $sql = 'SELECT * FROM entries';
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-var_dump($entries);
+
 
 ?>
 
@@ -46,18 +46,21 @@ var_dump($entries);
     <main class="main">
         <div class="container">
             <h1 class="main-heading">Entries</h1>
+           
+           <?php foreach ($entries as $entry) { ?>
             <div class="card">
                 <div class="card__image-container">
-                    <img class="card__image" src="images/pexels-canva-studio-3153199.jpg" alt="" />
+                    <img class="card__image" src="./images/pexels-canva-studio-3153199.jpg" alt="" />
                 </div>
                 <div class="card__desc-container">
-                    <div class="card__desc-time">Week 1</div>
-                    <h2 class="card__heading">PHP is amazing!</h2>
+                    <div class="card__desc-time"><?php echo $entry['date']; ?></div>
+                    <h2 class="card__heading"><?php echo $entry['title']; ?></h2>
                     <p class="card__paragraph">
-                        PHP, a widely used server-side scripting language, stands out for its remarkable ease of use, extensive community support, and flexibility. It integrates seamlessly with HTML, making it ideal for web development, and offers a vast array of frameworks that streamline the development process. PHP's compatibility with various databases, its cost-effectiveness (being open-source), and its constant evolution with regular updates contribute to its enduring popularity and cool factor in the web development world.
+                        <?php echo $entry['message']; ?>
                     </p>
                 </div>
             </div>
+            <?php } ?>
 
 
             <ul class="pagination">
