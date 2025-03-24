@@ -1,34 +1,38 @@
-version: "3"
+version: "3.8"
 
 services:
-  db:
-    build: ./db
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
     environment:
       - MARIADB_ROOT_PASSWORD=root
-      - MARIADB_DATABASE=php_diary
-      - MARIADB_USER=php_user
-      - MARIADB_PASSWORD=php_password
+      - MARIADB_DATABASE=diary
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - ./data/db:/var/lib/mysql
+      - ./data/init:/docker-entrypoint-initdb.d
 
-  web:
-    image: php:8.2-apache
-    ports:
-      - 80:80
+  php-apache:
+    build: ./php # Använd den anpassade Dockerfile
+    container_name: php-apache
+    restart: always
     volumes:
-      - .:/var/www/html
+      - ./www:/var/www/html
+    ports:
+      - "8080:80"
     depends_on:
-      - db
+      - mariadb
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    ports:
-      - 8080:80
+    container_name: phpmyadmin
+    restart: always
     environment:
-      - PMA_HOST=db
-      - PMA_USER=root
-      - PMA_PASSWORD=root
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"
     depends_on:
-      - db
+      - mariadb
