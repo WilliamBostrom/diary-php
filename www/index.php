@@ -5,8 +5,21 @@ require __DIR__ . '/inc/functions.inc.php';
 
 $perPage = 2;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+if($page < 1) {
+    $page = 1;
+}
+
+
+
 $offset = ($page - 1) * $perPage;
 
+
+$stmtCount = $pdo->prepare('SELECT COUNT(*) as `count` FROM `entries`');
+$stmtCount->execute();
+$count = $stmtCount->fetch(PDO::FETCH_ASSOC)['count'];
+
+
+$numPages = ceil($count / $perPage);
 $stmt = $pdo->prepare('SELECT * FROM `entries` ORDER BY `date` DESC, `id` DESC LIMIT :perPage OFFSET :offset');
 $stmt->bindValue(':perPage', (int) $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
@@ -33,22 +46,23 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 <?php } ?>
 
-
-<ul class="pagination">
-    <li class="pagination__li">
-        <a class="pagination__link" href="#">⏴</a>
-    </li>
-    <li class="pagination__li">
-        <a class="pagination__link pagination__link--active" href="#">1</a>
-    </li>
-    <li class="pagination__li">
-        <a class="pagination__link" href="#">2</a>
-    </li>
-    <li class="pagination__li">
-        <a class="pagination__link" href="#">3</a>
-    </li>
-    <li class="pagination__li">
-        <a class="pagination__link" href="#">⏵</a>
-    </li>
-</ul>
- <?php include __DIR__ . '/views/footer.view.php'; ?>
+<?php if($numPages > 1): ?>
+    <ul class="pagination">
+        <?php if($page > 1): ?>
+        <li class="pagination__li">
+            <a class="pagination__link" href="index.php?<?php echo http_build_query(['page' => $page - 1]); ?>">⏴</a>
+        </li>
+        <?php endif; ?>
+        <?php for($x = 1; $x <= $numPages; $x++): ?>
+        <li class="pagination__li">
+            <a class="pagination__link <?php echo $page === $x ? 'pagination__link--active' : ''; ?>" href="index.php?<?php echo http_build_query(['page' => $x]); ?>"><?php echo $x; ?></a>
+        </li>
+        <?php endfor; ?>
+        <?php if($page >= $numPages): ?>
+        <li class="pagination__li">
+            <a class="pagination__link" href="index.php?<?php echo http_build_query(['page' => $page + 1]); ?>">⏵</a>
+        </li>
+        <?php endif; ?>
+    </ul>
+<?php endif; ?>
+<?php include __DIR__ . '/views/footer.view.php'; ?>
