@@ -1,3 +1,22 @@
+<?php
+require __DIR__ . '/inc/functions.inc.php';
+require __DIR__ . '/inc/db-connect.inc.php';
+
+if (!empty($_POST)) {
+    $title = (string) ($_POST['title'] ?? '');
+    $date = (string) ($_POST['date'] ?? '');
+    $message = (string) ($_POST['message'] ?? '');
+
+    $sql = $pdo->prepare("INSERT INTO entries (title, date, message) VALUES (:title, :date, :message)");
+    $sql->bindValue(':title', $title);
+    $sql->bindValue(':date', $date);
+    $sql->bindValue(':message', $message);
+    $sql->execute();
+
+    echo '<a href="index.php">Back to home</a>';
+    die();
+}
+?>
 <?php include __DIR__ . '/views/header.view.php'; ?>
 
 <h1 class="main-heading">New Entry</h1>
@@ -5,15 +24,15 @@
 <form method="POST" action="form.php">
     <div class="form-group">
         <label class="from-group__label" for="title">Title:</label>
-        <input class="from-group__input" type="text" id="title" name="title" />
+        <input class="from-group__input" type="text" id="title" name="title" required />
     </div>
     <div class="form-group">
         <label class="from-group__label" for="date">Date:</label>
-        <input class="from-group__input" type="date" id="date" name="date" />
+        <input class="from-group__input" type="date" id="date" name="date" required />
     </div>
     <div class="form-group">
         <label class="from-group__label" for="message">Message:</label>
-        <textarea class="from-group__input" id="message" name="message" rows="6"></textarea>
+        <textarea class="from-group__input" id="message" name="message" rows="6" required></textarea>
     </div>
     <div class="form-submit">
         <button class="button">
