@@ -3,6 +3,8 @@
 require __DIR__ . '/inc/db-connect.inc.php';
 require __DIR__ . '/inc/functions.inc.php';
 
+date_default_timezone_set('Europe/Stockholm');
+
 $perPage = 2;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 if($page < 1) {
@@ -37,8 +39,12 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <img class="card__image" src="./images/pexels-canva-studio-3153199.jpg" alt="" />
     </div>
     <div class="card__desc-container">
-        <div class="card__desc-time"><?php echo $entry['date']; ?></div>
-        <h2 class="card__heading"><?php echo $entry['title']; ?></h2>
+        <?php
+            $dateExploded = explode('-', $entry['date']);
+            $timestamp = mktime(12, 0, 0, $dateExploded[1], $dateExploded[2], $dateExploded[0]);
+        ?>
+        <div class="card__desc-time"><?php echo e(date('d/m/Y', $timestamp)); ?></div>
+        <h2 class="card__heading"><?php echo e($entry['title']); ?></h2>
         <p class="card__paragraph">
             <?php echo nl2br(e($entry['message'])); ?>
         </p>
