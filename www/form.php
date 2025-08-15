@@ -21,7 +21,7 @@ if (!empty($_POST)) {
 
 <h1 class="main-heading">New Entry</h1>
 
-<form method="POST" action="form.php">
+<form method="POST" action="form.php" enctype="multipart/form-data">
     <div class="form-group">
         <label class="from-group__label" for="title">Title:</label>
         <input class="from-group__input" type="text" id="title" name="title" required />
@@ -29,6 +29,10 @@ if (!empty($_POST)) {
     <div class="form-group">
         <label class="from-group__label" for="date">Date:</label>
         <input class="from-group__input" type="date" id="date" name="date" required />
+    </div>
+    <div class="form-group">
+        <label class="from-group__label" for="image">Image:</label>
+        <input class="from-group__input" type="file" id="image" name="image" />
     </div>
     <div class="form-group">
         <label class="from-group__label" for="message">Message:</label>

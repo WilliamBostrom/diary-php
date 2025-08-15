@@ -1,5 +1,4 @@
 <?php 
-
 require __DIR__ . '/inc/db-connect.inc.php';
 require __DIR__ . '/inc/functions.inc.php';
 
@@ -34,10 +33,14 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <h1 class="main-heading">results</h1>
 
 <?php foreach ($results as $entry) { ?>
+    <?php var_dump($entry);
+    ?>
 <div class="card">
+    <?php if (!empty($entry['image'])): ?>
     <div class="card__image-container">
         <img class="card__image" src="./images/pexels-canva-studio-3153199.jpg" alt="" />
     </div>
+    <?php endif; ?>
     <div class="card__desc-container">
         <?php
             $dateExploded = explode('-', $entry['date']);
